@@ -5,27 +5,41 @@ import {
   StatusBar
 } from 'react-native';
 
-import { WeatherScreen, NoNetScreen } from './Screens';
+import { CovidScreen, HasErrorScreen, NoNetScreen } from './Screens';
 
-import { Loader } from './Component/loader';
+import Loader from './Component/loader';
 import { useNetInfo } from "@react-native-community/netinfo";
-import HasErrorScreen from './Screens/hasError';
+import getAPIData from './API';
 
 
 function App() {
   const netinfo = useNetInfo();
-  const [network, setNetwork] = useState();
-  const [hasApiError, setHasApiError] = useState();
+  const [network, setNetwork] = useState(true);
+  const [hasApiError, setHasApiError] = useState(false);
   const [loading, setLoader] = useState();
+  const [apiData, setDATA] = useState();
 
   useEffect(() => {
-    callMyData2();
+    callMyData();
   }, [netinfo])
 
-  async function callMyData2() {
+  async function callMyData() {
     if (netinfo.isConnected == false) {
+      setNetwork(false);
     }
     else if (netinfo.isConnected) {
+      setNetwork(true);
+      setLoader(true);
+      let data = await getAPIData();
+      // console.log("data:-\n", data);
+      if (data.error) {
+        setHasApiError(true);
+      }
+      else {
+        setDATA(data.body);
+        setLoader(false);
+        setHasApiError(false);
+      }
     }
   }
 
@@ -33,14 +47,13 @@ function App() {
     <>
       <StatusBar barStyle="light-content" />
       {(network) ?
-        (hasApiError) ?
+        (!hasApiError) ?
           (loading) ?
             <Loader />
-            : <SafeAreaView>
-              <WeatherScreen temp={state.forecast.Temp} city={state.forecast.City} day={state.forecast.Day} />
-            </SafeAreaView>
-          : <SafeAreaView><HasErrorScreen myData={callMyData2} /></SafeAreaView>
-        : <SafeAreaView><NoNetScreen /></SafeAreaView>
+            :
+            <SafeAreaView ><CovidScreen DATA={apiData} callData={callMyData} /></SafeAreaView >
+          : <SafeAreaView ><HasErrorScreen myData={callMyData} /></SafeAreaView >
+        : <NoNetScreen />
       }
     </>
   );

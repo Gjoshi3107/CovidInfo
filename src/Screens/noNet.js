@@ -4,14 +4,14 @@ import {
   SafeAreaView,
   Text
 } from 'react-native';
-
+import globalStyles from '../StyleSheet';
 
 
 function NoNetScreen() {
   return (
     <>
-      <SafeAreaView style={{ justifyContent: 'center', height: '100%', paddingHorizontal: 20 }}>
-        <Text style={{ fontSize: 60 }}>No Internet!!</Text>
+      <SafeAreaView style={globalStyles.issueSafeArea}>
+        <Text style={globalStyles.issueText}>No Internet!!</Text>
       </SafeAreaView>
     </>
   );

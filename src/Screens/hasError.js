@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet
 } from 'react-native';
-
+import globalStyles from '../StyleSheet';
 
 
 function HasErrorScreen(props) {
@@ -17,8 +17,8 @@ function HasErrorScreen(props) {
 
   return (
     <>
-      <SafeAreaView style={{ justifyContent: 'center', height: '100%', paddingHorizontal: 20 }}>
-        <Text style={{ fontSize: 60 }}>Something went wrong at our end</Text>
+      <SafeAreaView style={globalStyles.issueSafeArea}>
+        <Text style={globalStyles.issueText}>Something went wrong at our end</Text>
         <TouchableOpacity
           style={styles.touch}
           onPress={() => { retry() }}
